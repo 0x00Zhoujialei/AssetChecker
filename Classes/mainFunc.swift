@@ -8,15 +8,6 @@ var assetCatalogPathOption:[String]? = nil
 let ignoredUnusedNames = [String]()
 
 for (index, arg) in CommandLine.arguments.enumerated() {
-    switch index {
-    case 1:
-        sourcePathOption = arg
-    case 2:
-        assetCatalogPathOption = arg
-    default:
-        break
-    }
-    
     if index == 1 {
         sourcePathOption = arg
     } else {
@@ -40,7 +31,7 @@ guard let assetCatalogAbsolutePath = assetCatalogPathOption else {
 
 print("Searching sources in \(sourcePath) for assets in \(assetCatalogAbsolutePath)")
 
-/* Put here the asset generating false positives, 
+/* Put here the asset generating false positives,
  For instance whne you build asset names at runtime
 let ignoredUnusedNames = [
     "IconArticle",
@@ -48,7 +39,7 @@ let ignoredUnusedNames = [
     "voteEN",
     "voteES",
     "voteFR"
-] 
+]
 */
 
 
@@ -69,14 +60,14 @@ func listAssets() -> [String] {
     guard let op = assetCatalogPathOption else { return [] }
     var result = [String]()
     for s in op {
-        result.append(listAssetsWith(s))
+        result.append(contentsOf: listAssetsWith(s))
     }
     return result
 }
 
 func listAssetsWith(_ path: String) -> [String] {
     let extensionName = "imageset"
-    let enumerator = FileManager.default.enumerator(atPath: assetCatalogAbsolutePath)
+    let enumerator = FileManager.default.enumerator(atPath: path)
     return elementsInEnumerator(enumerator)
         .filter { $0.hasSuffix(extensionName) }                             // Is Asset
         .map { $0.replacingOccurrences(of: ".\(extensionName)", with: "") } // Remove extension
@@ -92,7 +83,7 @@ func localizedStrings(inStringFile: String) -> [String] {
     let patterns = [
         "#imageLiteral\\(resourceName: \"\(namePattern)\"\\)", // Image Literal
         "UIImage\\(named:\\s*\"\(namePattern)\"\\)", // Default UIImage call (Swift)
-        "UIImage imageNamed:\\s*\\@\"\(namePattern)\"", // Default UIImage call 
+        "UIImage imageNamed:\\s*\\@\"\(namePattern)\"", // Default UIImage call
         "\\<image name=\"\(namePattern)\".*", // Storyboard resources
         "R.image.\(namePattern)\\(\\)" //R.swift support
     ]
