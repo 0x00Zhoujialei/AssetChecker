@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.screenshots     = 'https://raw.githubusercontent.com/freshos/AssetChecker/master/xcodeScreenshot.png'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Sacha Durand Saint Omer' => 'sachadso@gmail.com' }
-  s.source           = { :git => 'https://github.com/freshos/AssetChecker.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/0x00Zhoujialei/AssetChecker.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/sachadso'
   s.ios.deployment_target = '8.0'
   s.source_files     = "Classes/*.swift"
