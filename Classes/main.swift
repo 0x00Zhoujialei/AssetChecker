@@ -8,7 +8,9 @@ var assetCatalogPathOption:[String]? = nil
 let ignoredUnusedNames = [String]()
 
 for (index, arg) in CommandLine.arguments.enumerated() {
-    if index == 1 {
+    debugPrint("arg: \(arg)")
+    if index == 0 { continue }
+    else if index == 1 {
         sourcePathOption = arg
     } else {
         if assetCatalogPathOption == nil {
@@ -84,6 +86,7 @@ func localizedStrings(inStringFile: String) -> [String] {
         "#imageLiteral\\(resourceName: \"\(namePattern)\"\\)", // Image Literal
         "UIImage\\(named:\\s*\"\(namePattern)\"\\)", // Default UIImage call (Swift)
         "UIImage imageNamed:\\s*\\@\"\(namePattern)\"", // Default UIImage call
+        "UIImage.init\\(named:\\s*\"\(namePattern)\"\\)", // UIImage.init call
         "\\<image name=\"\(namePattern)\".*", // Storyboard resources
         "R.image.\(namePattern)\\(\\)" //R.swift support
     ]
@@ -102,10 +105,9 @@ func localizedStrings(inStringFile: String) -> [String] {
 
 func listUsedAssetLiterals() -> [String] {
     let enumerator = FileManager.default.enumerator(atPath:sourcePath)
-    print(sourcePath)
-    print(elementsInEnumerator(enumerator))
     #if swift(>=4.1)
         return elementsInEnumerator(enumerator)
+            .filter { !$0.contains("NewProfile/") && !$0.contains("NewHomePage/") && !$0.contains("NewMessage/") && !$0.contains("Utils/") && !$0.contains("Pods/") }
             .filter { $0.hasSuffix(".m") || $0.hasSuffix(".swift") || $0.hasSuffix(".xib") || $0.hasSuffix(".storyboard") }    // Only Swift and Obj-C files
             .map { "\(sourcePath)/\($0)" }                              // Build file paths
             .map { try? String(contentsOfFile: $0, encoding: .utf8)}    // Get file contents
@@ -129,7 +131,6 @@ func listUsedAssetLiterals() -> [String] {
 // MARK: - Begining of script
 let assets = Set(listAssets())
 let used = Set(listUsedAssetLiterals() + ignoredUnusedNames)
-
 
 // Generate Warnings for Unused Assets
 let unused = assets.subtracting(used)
