@@ -4,7 +4,7 @@ import Foundation
 
 // Configure me \o/
 var sourcePathOption:String? = nil
-var assetCatalogPathOption:String? = nil
+var assetCatalogPathOption:[String]? = nil
 let ignoredUnusedNames = [String]()
 
 for (index, arg) in CommandLine.arguments.enumerated() {
@@ -15,6 +15,16 @@ for (index, arg) in CommandLine.arguments.enumerated() {
         assetCatalogPathOption = arg
     default:
         break
+    }
+    
+    if index == 1 {
+        sourcePathOption = arg
+    } else {
+        if assetCatalogPathOption == nil {
+            assetCatalogPathOption = [arg]
+        } else {
+            assetCatalogPathOption?.append(arg)
+        }
     }
 }
 
@@ -56,6 +66,15 @@ func elementsInEnumerator(_ enumerator: FileManager.DirectoryEnumerator?) -> [St
 // MARK: - List Assets
 
 func listAssets() -> [String] {
+    guard let op = assetCatalogPathOption else { return [] }
+    var result = [String]()
+    for s in op {
+        result.append(listAssetsWith(s))
+    }
+    return result
+}
+
+func listAssetsWith(_ path: String) -> [String] {
     let extensionName = "imageset"
     let enumerator = FileManager.default.enumerator(atPath: assetCatalogAbsolutePath)
     return elementsInEnumerator(enumerator)
@@ -93,7 +112,7 @@ func localizedStrings(inStringFile: String) -> [String] {
 func listUsedAssetLiterals() -> [String] {
     let enumerator = FileManager.default.enumerator(atPath:sourcePath)
     print(sourcePath)
-    
+    print(elementsInEnumerator(enumerator))
     #if swift(>=4.1)
         return elementsInEnumerator(enumerator)
             .filter { $0.hasSuffix(".m") || $0.hasSuffix(".swift") || $0.hasSuffix(".xib") || $0.hasSuffix(".storyboard") }    // Only Swift and Obj-C files
