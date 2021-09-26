@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/sachadso'
   s.ios.deployment_target = '8.0'
   s.source_files     = "Classes/*.swift"
-  s.preserve_paths = [ 'run' ]
+  s.preserve_paths =  'run', "Classes/*.swift" 
   s.exclude_files = 'Classes/*.swift'
 end
