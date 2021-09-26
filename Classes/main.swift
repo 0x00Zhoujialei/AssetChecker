@@ -6,7 +6,7 @@ import Foundation
 var sourcePathOption:String? = nil
 var assetCatalogPathOption:[String]? = nil
 let ignoredUnusedNames = [String]()
-var ignoredMissingNames: [String] = nil
+var ignoredMissingNames: [String]? = nil
 var moduleName: String? = nil
 
 let argumentsCount = CommandLine.arguments.count
