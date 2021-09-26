@@ -6,12 +6,17 @@ import Foundation
 var sourcePathOption:String? = nil
 var assetCatalogPathOption:[String]? = nil
 let ignoredUnusedNames = [String]()
+var ignoredMissingNames: [String] = nil
+var moduleName: String? = nil
 
+let argumentsCount = CommandLine.arguments.count
 for (index, arg) in CommandLine.arguments.enumerated() {
     debugPrint("arg: \(arg)")
     if index == 0 { continue }
     else if index == 1 {
         sourcePathOption = arg
+    } else if index == argumentsCount - 1 {
+        moduleName = arg
     } else {
         if assetCatalogPathOption == nil {
             assetCatalogPathOption = [arg]
@@ -19,6 +24,15 @@ for (index, arg) in CommandLine.arguments.enumerated() {
             assetCatalogPathOption?.append(arg)
         }
     }
+}
+
+if let mn = moduleName,
+   mn == "ThomasCook" {
+    ignoredMissingNames = [
+        "meiqia-icon",
+        "noSearchResult",
+        "live_beauty_selection_bg"
+    ]
 }
 
 guard let sourcePath = sourcePathOption else {
@@ -129,7 +143,7 @@ func listUsedAssetLiterals() -> [String] {
 
 
 // MARK: - Begining of script
-let assets = Set(listAssets())
+let assets = Set(listAssets() + ignoredMissingNames)
 let used = Set(listUsedAssetLiterals() + ignoredUnusedNames)
 
 // Generate Warnings for Unused Assets
