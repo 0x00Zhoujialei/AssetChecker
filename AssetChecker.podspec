@@ -12,5 +12,4 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.source_files     = "Classes/*.swift"
   s.preserve_paths =  'run', "Classes/*.swift" 
-  s.exclude_files = 'Classes/*.swift'
 end
